@@ -10,7 +10,7 @@ pip install opencv-contrib-python
 pip install filetype argparse
 ```
 
-## Basic Usage
+## Usage Example
 ```
 python main.py -i lena.img -s 1 -n blurredlena.png
 ```
