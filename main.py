@@ -54,6 +54,7 @@ def blur_image():
                 print("Saved successfully")
             elif name_input == "":
                 print("--name argument is empty.")
+                exit
 
         except:
             print("Error occured while saving")
