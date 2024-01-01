@@ -1,12 +1,11 @@
 #Exception handling of importing libs
 try:
     import cv2
-    import filetype
     import os
     import argparse
 
 except:
-    print("Libs are not installed, use 'pip install opencv-python opencv-contrib-python filetype os argparse'")
+    print("Libs are not installed, use 'pip install opencv-python opencv-contrib-python os argparse'")
 
 ap = argparse.ArgumentParser()
 
