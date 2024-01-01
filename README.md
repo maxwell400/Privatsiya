@@ -7,7 +7,7 @@ This program blur faces with OpenCV2.
 pip install opencv-python
 pip install opencv-contrib-python
 
-pip install filetype argparse
+pip install argparse
 ```
 
 ## Usage Example
