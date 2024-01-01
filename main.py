@@ -6,7 +6,7 @@ try:
     import argparse
 
 except:
-    print("Libs are not installed, use 'pip install cv2 filetype os argparse'")
+    print("Libs are not installed, use 'pip install opencv-python opencv-contrib-python filetype os argparse'")
 
 ap = argparse.ArgumentParser()
 
