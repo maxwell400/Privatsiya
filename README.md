@@ -1,6 +1,6 @@
 # Privatsiya, blur faces with Python basicly
 
-This program blur faces with OpenCV2. 
+This program blurs faces with OpenCV2. 
 
 ## Installation of Libraries
 ```
