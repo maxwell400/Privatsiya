@@ -46,16 +46,14 @@ def blur_image():
 
     if str((args["save"])) == "1":
         try:
-            name_input = str((args["name"]))
-            if name_input != "":
-                cv2.imwrite(name_input, img)
-                print("Saved successfully")
-            elif name_input == "":
+            if args["name"] == None: #Got name argument from variable and made a statement
                 print("--name argument is empty.")
-                exit
+            else:
+                cv2.imwrite(str(args["name"]), img)
+                print("Saved successfully.")
 
         except:
-            print("Error occured while saving")
+            print("Error occured while saving.")
 
     else:
         print("Quitting...")
