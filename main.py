@@ -1,61 +1,62 @@
-#Exception handling of importing libs
+#Import libraries
 try:
+    from ultralytics import YOLO
+    import filetype
     import cv2
     import argparse
 
-except:
-    print("Libs are not installed, use 'pip install opencv-python opencv-contrib-python argparse'")
+    print("Libraries imported successfully.")
 
-ap = argparse.ArgumentParser()
+except:
+    #To fix this, you may downgrade Python version and install libraries again
+    print("An error occured while importing libraries.")
 
 #Added arguments for easier usage
-ap.add_argument("-i", "--image", required=True, help="Path for the image")
+ap = argparse.ArgumentParser()
 
-ap.add_argument("-s", "--save", required=True, help="1 for saving the image, 0 for not saving it.")
+ap.add_argument("-f", "--file", required=True, help="Path to the file.")
+ap.add_argument("-s", "--save",  required=True, help="Set the value as 1 if want to save it. 0 to not save it. DO NOT FORGET, this argument used as string, not a boolean.")
+ap.add_argument("-n", "--name", required=False, help="If you set the value of --save argument, this parameter must be set too. This parameter value sets name of the blurred file.")
 
-ap.add_argument("-n", "--name", required=False, help="Determine a name for your blurred image if you want to save your file.")
-
-#Arguments assigned to a variable 
 args = vars(ap.parse_args())
 
-#Dataset to detect faces
-cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+def video_file():
+    #TODO
+    pass
 
-def blur_image():
-    img = cv2.imread(args["image"])
+def image_file():
+    image = cv2.imread(args["file"]) #Get image path from arguments' list
 
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) #Image converted to grayscale for face detection
+    yolo = YOLO("yolov8n-face.pt")
 
-    fd = cascade.detectMultiScale(
-        gray_img,
-        scaleFactor = 1.1,
-        minNeighbors = 5,
-        minSize=(30,30),
-        flags=cv2.CASCADE_SCALE_IMAGE
-    )
+    face_detection = yolo(image)
 
-    for(x, y, w, h) in fd:
-        #cv2.rectangle(img, (x,y), (x+w , y+h), (255,0,0), 2) #Remove the sharp for showing detection lines
-        f = img[y:y+h, x:x+w]
-        f = cv2.GaussianBlur(f,(23,23), cv2.BORDER_DEFAULT)
+    boxes = face_detection[0].boxes
 
-        img[y:y+f.shape[0], x:x+f.shape[1]] = f #Assignation of f is reversed because of the row by row compile 
-
-    cv2.imshow("img", img)
-    cv2.waitKey(0)
+    for box in boxes:
+        x, y, w, h = map(int, box.xyxy[0]) #Rectangle coordinates
+        f = image[y:h, x:w] #Face area
+        blurred_face = cv2.GaussianBlur(f, (23,23), cv2.BORDER_DEFAULT) #Blur "f" areas
+        image[y:h, x:w] = blurred_face #Place the blurred "f" areas to original image
 
     if str((args["save"])) == "1":
         try:
-            if args["name"] == None: #Got name argument from variable and made a statement
+            if args["name"] == None: #As --name mentioned as empty it is None as value, determined by argparse library
                 print("--name argument is empty.")
             else:
-                cv2.imwrite(str(args["name"]), img)
+                cv2.imwrite(str(args["name"]), image)
                 print("Saved successfully.")
-
         except:
             print("Error occured while saving.")
 
-    else:
-        print("Quitting...")
-        
-blur_image()
+
+if "image" in str(filetype.guess(str(args["file"]))):
+    print("Image file detected.")
+    image_file()
+
+elif "video" in str(filetype.guess(str(args["file"]))):
+    print("Video file detected.")
+    video_file()
+
+else:
+    print("Unrecognised file type. Make sure your file type is acceptable or check your files integration within filetype library.")
