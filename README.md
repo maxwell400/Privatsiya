@@ -16,4 +16,4 @@ python main.py -i lena.img -s 1 -n blurredlena.png
 ```
 
 ## Results
-UPLOADING SOON
+![Uploading test.png…]()
