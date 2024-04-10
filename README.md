@@ -6,8 +6,10 @@ This program blurs faces with Ultralytics and OpenCV2 library.
 ```
 pip install opencv-python
 pip install opencv-contrib-python
+pip install ultralytics
 
 pip install argparse
+pip install filetype
 ```
 
 ## Usage Example
