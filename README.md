@@ -14,7 +14,7 @@ pip install filetype
 
 ## Usage Example
 ```
-python main.py -i lena.img -s 1 -n blurredlena.png
+python main.py -i test.img -s 1 -n blurredtest.png
 ```
 
 ## Results
