@@ -16,7 +16,7 @@ pip install filetype
 ```
 python main.py -i test.img -s 1 -n blurredtest.png
 ```
-##Known Issues
+## Known Issues
 Faces are sometimes not detected for short periods of time (which can be fixed with a better trained AI model.)
 Video processing is slow (which can be fixed with multiprocessing.)
 
