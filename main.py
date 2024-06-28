@@ -21,9 +21,53 @@ ap.add_argument("-n", "--name", required=False, help="If you set the value of --
 args = vars(ap.parse_args())
 
 def video_file():
-    #TODO
-    pass
+    video = cv2.VideoCapture(args["file"])
 
+    yolo = YOLO("yolov8n-face.pt")
+
+    if not video.isOpened():
+        print("Unable to load the video.")
+        return
+    if args["save"] == 1 and args["name"]:
+        width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        fps = video.get(cv2.CAP_PROP_FPS) #FPS did not attached as 'int' because of non-integer fps probabilities.
+
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        out = cv2.VideoWriter(args["name"], fourcc, fps, (width, height))
+
+    while video.isOpened():
+        ret, frame = video.read()
+
+        if not ret:
+            break
+
+        face_detection = yolo(frame)
+        boxes = face_detection[0].boxes
+
+        for box in boxes:
+            x, y, w, h = map(int, box.xyxy[0])
+            face = frame[y:h, x:w]
+            blurred_face = cv2.GaussianBlur(face, (23,23), cv2.BORDER_DEFAULT)
+            frame[y:h, x:w] = blurred_face
+
+        if args["save"] == 1 and args["name"]:
+            out.write(frame)
+        
+        else:
+            cv2.imshow("video", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+    
+    video.release()
+    if args["save"] == 1 and args["name"]:
+        out.release()
+        print(f"Blurred video saved.")
+
+    else:
+        cv2.destroyAllWindows()
+ 
 def image_file():
     image = cv2.imread(args["file"]) #Get image path from arguments' list
 
